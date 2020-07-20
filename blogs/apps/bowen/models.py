@@ -7,6 +7,7 @@ from django.db import models
 # 文章分类
 class BowenKind(models.Model):
 
+    kind_url = models.CharField('类别链接', max_length=100, null=True, blank=True)
     kind_name = models.CharField('文章类别', max_length=100)
 
     class Meta:

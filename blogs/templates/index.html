@@ -23,27 +23,30 @@
 			    </div>
 			    <div class="layui-col-md8 layui-hide-xs">
 			    	<ul class="layui-nav layui-bg-cyan">
-					  	<li class="layui-nav-item layui-this">
-					    	<a href="">首页</a>
-					  	</li>
-					  	<li class="layui-nav-item">
-					    	<a href="">PHP<span class="layui-badge-dot"></span></a>
-					  	</li>
-					  	<li class="layui-nav-item">
-					    	<a href="">Ruby</a>
-					  	</li>
-					  	<li class="layui-nav-item">
-					    	<a href="">Python</a>
-					  	</li>
-					  	<li class="layui-nav-item">
-					    	<a href="">Discuz<span class="layui-badge-dot"></span></a>
-					  	</li>
-					  	<li class="layui-nav-item">
-					    	<a href="">仓库<span class="layui-badge">9</span></a>
-					  	</li>
-					  	<li class="layui-nav-item">
-					    	<a href="">关于</a>
-					  	</li>
+                        {% for item in kindList %}
+                            <li class="layui-nav-item">
+                                <a href="">{{ item.kind_name }}</a>
+                            </li>
+                        {% endfor %}
+
+{#					  	<li class="layui-nav-item">#}
+{#					    	<a href="">PHP</a>#}
+{#					  	</li>#}
+{#					  	<li class="layui-nav-item">#}
+{#					    	<a href="">Ruby</a>#}
+{#					  	</li>#}
+{#					  	<li class="layui-nav-item">#}
+{#					    	<a href="">Python</a>#}
+{#					  	</li>#}
+{#					  	<li class="layui-nav-item">#}
+{#					    	<a href="">Discuz</a>#}
+{#					  	</li>#}
+{#					  	<li class="layui-nav-item">#}
+{#					    	<a href="">仓库</a>#}
+{#					  	</li>#}
+{#					  	<li class="layui-nav-item">#}
+{#					    	<a href="">关于</a>#}
+{#					  	</li>#}
 					</ul>
 			    </div>
 			    <div class="layui-col-md2 layui-hide-xs userinfoBox">
