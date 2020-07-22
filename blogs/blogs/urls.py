@@ -25,7 +25,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # 文件
     path('media/<path:path>', serve, {'document_root': MEDIA_ROOT}),
-    path('', include('bowen.urls')),
-    path('users/', include('users.urls')),
-    path('comments/', include('comments.urls'))
+    path('article/', include('article.urls', namespace='article')),
 ]

@@ -40,9 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users',
-    'bowen',
-    'comments',
+    'article',
 ]
 
 MIDDLEWARE = [
@@ -100,8 +98,8 @@ DATABASES = {
     }
 }
 
-# 重载系统的用户，让UserProfile生效
-AUTH_USER_MODEL = 'users.UserProfile'
+# # 重载系统的用户，让UserProfile生效
+# AUTH_USER_MODEL = 'users.UserProfile'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
