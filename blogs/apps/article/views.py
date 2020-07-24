@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
 from django.views import View
+from django.db.models import Q
+from django.core.paginator import Paginator
+
 from .models import ArticlePost
 
 import markdown
@@ -10,10 +13,38 @@ class ArticleListViews(View):
 
     def get(self, request):
 
-        blogsObj = ArticlePost.objects.all()
+        search = request.GET.get('search')
+        order = request.GET.get('order')
+
+        if search:
+            if order == 'click':
+                articleList = ArticlePost.objects.filter(Q(title__icontains=search) | Q(body__icontains=search)).order_by('-click')
+
+            else:
+                articleList = ArticlePost.objects.filter(Q(title__icontains=search) | Q(body__icontains=search))
+
+        else:
+            # 将 search 参数重置为空
+            search = ''
+            # 根据GET请求中查询条件
+            # 返回不同排序的对象数组
+            if order == 'click':
+                articleList = ArticlePost.objects.all().order_by('-click')
+
+            else:
+                articleList = ArticlePost.objects.all()
+
+        # 每页显示 2 篇文章
+        paginator = Paginator(articleList, 2)
+        # 获取URL中的页码
+        page = request.GET.get('page')
+        # 将导航对象相应的页码内容返回给 articles
+        articles = paginator.get_page(page)
 
         content = {
-            'blogList': blogsObj
+            'articles': articles,
+            'order': order,
+            'search': search,
         }
 
         return render(request, 'article/list.html', content)
@@ -25,20 +56,29 @@ class ArticleDetailViews(View):
 
         try:
             articleObj = ArticlePost.objects.get(id=id)
+            articleObj.click += 1
+            articleObj.save(update_fields=['click'])
 
-            articleObj.body = markdown.markdown(articleObj.body, extensions=[
-                                                                    # 包含 缩写、表格等常用扩展
-                                                                    'markdown.extensions.extra',
-                                                                    # 语法高亮扩展
-                                                                    'markdown.extensions.codehilite',
-                                                         ])
+            # 修改 Markdown 语法渲染
+            md = markdown.Markdown(
+                extensions=[
+                    'markdown.extensions.extra',
+                    'markdown.extensions.codehilite',
+                    'markdown.extensions.toc',
+                ]
+            )
+            articleObj.body = md.convert(articleObj.body)
         except Exception:
 
             return redirect('article:article-list')
 
 
         content = {
-            'article': articleObj
+            'article': articleObj,
+            'toc': md.toc,
         }
         return render(request, 'article/detail.html', content)
+
+
+
 
