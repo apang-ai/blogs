@@ -17,14 +17,17 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.static import serve
 
-from blogs.settings import MEDIA_ROOT
 
+from blogs.settings import MEDIA_ROOT
+from django.conf.urls.static import static
+from django.conf import settings
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # 文件
-    path('media/<path:path>', serve, {'document_root': MEDIA_ROOT}),
+    # # 文件
+    # path('media/<path:path>', serve, {'document_root': MEDIA_ROOT}),
     path('article/', include('article.urls', namespace='article')),
     path('users/', include('users.urls', namespace='users')),
-]
+    path('password-reset/', include('password_reset.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

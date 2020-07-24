@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'article',
     'users',
+    'password_reset',
 ]
 
 MIDDLEWARE = [
@@ -142,6 +143,17 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
-# 设置上传文件的路径
-MEDIA_URL = "/media/"
-MEDIA_ROOT = [os.path.join(BASE_DIR, "media")]
+# 媒体文件地址
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.qq.com"
+EMAIL_PORT = 25                            # 大多都是25；若使用SSL，端口号465或587
+EMAIL_HOST_USER = "1305999617@qq.com"      # 发送邮箱
+# EMAIL_HOST_PASSWORD = "psbuquzbidzdbafc"   # 使用的是QQ的授权码，不是你的密码
+EMAIL_HOST_PASSWORD = "kgitfewldpzwficb"   # 使用的是QQ的授权码，不是你的密码
+EMAIL_USE_TLS = True                     # 一定要是True，否则发不了
+# EMAIL_FROM = 'aPang的博客<1305999617@qq.com>'  # 邮件发送人(邮件中所显示的发送人，和EMAIL_HOST_USER同)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
