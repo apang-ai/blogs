@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 # Django-taggit
 from taggit.managers import TaggableManager
+from PIL import Image
 
 
 class ArticleColumn(models.Model):
@@ -31,6 +32,9 @@ class ArticlePost(models.Model):
     # 文章标题。models.CharField 为字符串字段，用于保存较短的字符串，比如标题
     title = models.CharField('博文标题', max_length=100)
 
+    # 文章标题图
+    avatar = models.ImageField(upload_to='article/%Y%m%d/', blank=True)
+
     # 文章正文。保存大量文本使用 TextField
     body = models.TextField('博文内容')
 
@@ -51,6 +55,22 @@ class ArticlePost(models.Model):
 
     # 是否删除
     is_delete = models.BooleanField('是否删除', default=False)
+
+    def save(self, *args, **kwargs):
+        # 调用原有的 save() 功能
+        article = super(ArticlePost, self).save(*args, **kwargs)
+
+        # 固定宽度缩放图偏大小
+        if self.avatar and not kwargs.get('update_fields'):
+
+            image = Image.open(self.avatar)
+            (x, y) = image.size
+            newX = 400
+            newY = int(newX*(y/x))
+            resized_image = image.resize((newX, newY), Image.ANTIALIAS)
+            resized_image.save(self.avatar.path)
+
+        return article
 
     # 内部类 class Meta 用于给 model 定义元数据
     class Meta:
