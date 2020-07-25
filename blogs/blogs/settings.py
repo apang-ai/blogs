@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'article',
     'users',
     'password_reset',
+    'taggit',
 ]
 
 MIDDLEWARE = [

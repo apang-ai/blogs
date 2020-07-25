@@ -15,24 +15,29 @@ class ArticleListViews(View):
 
         search = request.GET.get('search')
         order = request.GET.get('order')
+        column = request.GET.get('column')
+        tag = request.GET.get('tag')
+
+        articleList = ArticlePost.objects.all()
 
         if search:
-            if order == 'click':
-                articleList = ArticlePost.objects.filter(Q(title__icontains=search) | Q(body__icontains=search)).order_by('-click')
-
-            else:
-                articleList = ArticlePost.objects.filter(Q(title__icontains=search) | Q(body__icontains=search))
+            articleList = ArticlePost.objects.filter(Q(title__icontains=search) | Q(body__icontains=search))
 
         else:
             # 将 search 参数重置为空
             search = ''
-            # 根据GET请求中查询条件
-            # 返回不同排序的对象数组
-            if order == 'click':
-                articleList = ArticlePost.objects.all().order_by('-click')
 
-            else:
-                articleList = ArticlePost.objects.all()
+        # 栏目查询集
+        if column is not None and column.isdigit():
+            articleList = articleList.filter(column=column)
+
+        if tag and tag != 'None':
+
+            articleList = articleList.filter(tags__name__in=[tag])
+        # 根据GET请求中查询条件
+        # 返回不同排序的对象数组
+        if order == 'click':
+            articleList = ArticlePost.objects.all().order_by('-click')
 
         # 每页显示 2 篇文章
         paginator = Paginator(articleList, 2)
@@ -45,6 +50,8 @@ class ArticleListViews(View):
             'articles': articles,
             'order': order,
             'search': search,
+            'column': column,
+            'tag': tag,
         }
 
         return render(request, 'article/list.html', content)

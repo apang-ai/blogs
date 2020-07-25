@@ -3,10 +3,27 @@ from django.db import models
 from django.contrib.auth.models import User
 # timezone 用于处理时间相关事务。
 from django.utils import timezone
+# Django-taggit
+from taggit.managers import TaggableManager
+
+
+class ArticleColumn(models.Model):
+    '''栏目的model'''
+    kind = models.CharField(max_length=100, blank=True)
+    created = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.kind
+
+    class Meta:
+        verbose_name = "文章分类"
+        verbose_name_plural = verbose_name
 
 
 # 博客文章数据模型
 class ArticlePost(models.Model):
+    # 外键 文章分类一对多的关系
+    column = models.ForeignKey(ArticleColumn, null=True, blank=True, on_delete=models.CASCADE)
 
     # 文章作者。参数 on_delete 用于指定数据删除的方式
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -16,6 +33,9 @@ class ArticlePost(models.Model):
 
     # 文章正文。保存大量文本使用 TextField
     body = models.TextField('博文内容')
+
+    # 文章标签
+    tags = TaggableManager('文章标签', blank=True)
 
     # 点击量
     click = models.IntegerField('阅读量', default=0)
